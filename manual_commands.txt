@@ -1,0 +1,49 @@
+# Manual Commands to Push Frontend to GitHub
+# Run these commands one by one in Command Prompt
+
+# 1. Navigate to main directory
+cd /d "c:\Users\gayat\Downloads\SIH_QR\SIH_QR"
+
+# 2. Initialize git repository
+git init
+
+# 3. Set remote repository
+git remote remove origin
+git remote add origin https://github.com/Sora49/sih_qr_host.git
+
+# 4. Create frontend folder
+mkdir frontend
+
+# 5. Copy Flutter files to frontend folder
+xcopy "sih_qr\*" "frontend\" /E /I /Y
+
+# 6. Create .gitignore file
+echo # Local backend files > .gitignore
+echo backend/.env >> .gitignore
+echo backend/venv/ >> .gitignore
+echo backend/__pycache__/ >> .gitignore
+echo backend/*.pyc >> .gitignore
+echo backend/tenders_export_*.xlsx >> .gitignore
+echo. >> .gitignore
+echo # Flutter build files >> .gitignore
+echo frontend/build/ >> .gitignore
+echo frontend/.dart_tool/ >> .gitignore
+echo frontend/.packages >> .gitignore
+
+# 7. Add all files
+git add .
+
+# 8. Check what will be committed
+git status
+
+# 9. Commit changes
+git commit -m "Add Flutter frontend to repository - complete QR scanner app with backend integration"
+
+# 10. Push to GitHub
+git push -u origin main
+
+# Repository will have structure:
+# backend/     - Flask API server (already there)
+# frontend/    - Flutter mobile app (new)
+# 
+# Your app will be complete on GitHub!

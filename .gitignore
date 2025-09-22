@@ -1,0 +1,12 @@
+# Local backend files 
+backend/.env 
+backend/venv/ 
+backend/__pycache__/ 
+backend/*.pyc 
+backend/tenders_export_*.xlsx 
+ 
+# Flutter build files 
+frontend/build/ 
+frontend/.dart_tool/ 
+frontend/.packages 
+frontend/pubspec.lock 
