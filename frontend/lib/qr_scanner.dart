@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:http/http.dart' as http;
+import 'results_page.dart';
 
 class QRScannerPage extends StatefulWidget {
   const QRScannerPage({Key? key}) : super(key: key);
@@ -14,7 +15,6 @@ class QRScannerPage extends StatefulWidget {
 
 class _QRScannerPageState extends State<QRScannerPage> {
   String? qrText;
-  Map<String, dynamic>? rowData;
   bool isLoading = false;
   String? errorMessage;
 
@@ -33,7 +33,6 @@ class _QRScannerPageState extends State<QRScannerPage> {
     setState(() {
       isLoading = true;
       errorMessage = null;
-      rowData = null;
     });
 
     try {
@@ -90,10 +89,17 @@ class _QRScannerPageState extends State<QRScannerPage> {
       try {
         final data = jsonDecode(response.body);
         setState(() {
-          rowData = data;
           isLoading = false;
         });
         print("Data fetched successfully from $successUrl: $data");
+
+        // Navigate to results page
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ResultsPage(qrCode: uuid, data: data),
+          ),
+        );
       } catch (e) {
         throw Exception("Failed to parse JSON response: $e");
       }
@@ -134,63 +140,72 @@ class _QRScannerPageState extends State<QRScannerPage> {
               ),
             ),
           ),
-          Expanded(
-            flex: 1,
-            child: Container(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Scanned QR Code:',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          Container(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              children: [
+                Icon(Icons.qr_code_scanner, size: 48, color: Colors.blue),
+                const SizedBox(height: 16),
+                Text(
+                  'Scan a QR Code',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    qrText ?? 'No QR code scanned yet',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  const SizedBox(height: 16),
-                  if (isLoading)
-                    const Center(child: CircularProgressIndicator())
-                  else if (errorMessage != null)
-                    Text(
-                      'Error: $errorMessage',
-                      style: TextStyle(color: Colors.red, fontSize: 14),
-                    )
-                  else if (rowData != null)
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Data from Database:',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            ...rowData!.entries
-                                .map(
-                                  (entry) => Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 2.0,
-                                    ),
-                                    child: Text(
-                                      '${entry.key}: ${entry.value}',
-                                      style: TextStyle(fontSize: 14),
-                                    ),
-                                  ),
-                                )
-                                .toList(),
-                          ],
-                        ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  qrText != null
+                      ? 'Last scanned: $qrText'
+                      : 'Position the QR code within the frame above',
+                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                if (isLoading)
+                  Column(
+                    children: [
+                      const CircularProgressIndicator(),
+                      const SizedBox(height: 12),
+                      Text(
+                        'Fetching data...',
+                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
+                    ],
+                  )
+                else if (errorMessage != null)
+                  Container(
+                    padding: const EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      color: Colors.red.shade50,
+                      borderRadius: BorderRadius.circular(8.0),
+                      border: Border.all(color: Colors.red.shade200),
                     ),
-                ],
-              ),
+                    child: Column(
+                      children: [
+                        Icon(Icons.error_outline, color: Colors.red, size: 24),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Connection Error',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.red,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          errorMessage!,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.red[700],
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
             ),
           ),
         ],
