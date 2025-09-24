@@ -271,4 +271,80 @@ ALTER TABLE tenders ADD COLUMN uuid CHAR(12);
 
 UPDATE tenders SET uuid = substring(md5(random()::text), 1, 12);
 
+-- Add manufacturer column
+ALTER TABLE tenders ADD COLUMN manufacturer VARCHAR(255);
+
+-- Update all existing records with Indian manufacturer names
+UPDATE tenders SET manufacturer = 'BHEL (Bharat Heavy Electricals Limited)' WHERE tender_no = '433_Sig_JAT_13_25_26';
+UPDATE tenders SET manufacturer = 'Larsen & Toubro Limited' WHERE tender_no = 'LL255131';
+UPDATE tenders SET manufacturer = 'Godrej & Boyce Manufacturing Company' WHERE tender_no = '20251150';
+UPDATE tenders SET manufacturer = 'Tata Steel Limited' WHERE tender_no = '80251035';
+UPDATE tenders SET manufacturer = 'Siemens Limited India' WHERE tender_no = '72255679';
+UPDATE tenders SET manufacturer = 'Jindal Steel & Power Limited' WHERE tender_no = '30251800';
+UPDATE tenders SET manufacturer = 'Hindustan Aeronautics Limited' WHERE tender_no = '82253533';
+UPDATE tenders SET manufacturer = 'Bharat Forge Limited' WHERE tender_no = 'L8256159A';
+UPDATE tenders SET manufacturer = 'Steel Authority of India Limited' WHERE tender_no = '22251374';
+UPDATE tenders SET manufacturer = 'Mahindra & Mahindra Limited' WHERE tender_no = '78246381B';
+UPDATE tenders SET manufacturer = 'Bajaj Auto Limited' WHERE tender_no = '78256177A';
+UPDATE tenders SET manufacturer = 'Cipla Limited' WHERE tender_no = 'CH251843A';
+UPDATE tenders SET manufacturer = 'Texmaco Rail & Engineering Limited' WHERE tender_no = '65255406';
+UPDATE tenders SET manufacturer = 'HCL Technologies Limited' WHERE tender_no = 'LY2556421';
+UPDATE tenders SET manufacturer = 'Dr. Reddy''s Laboratories' WHERE tender_no = '82250835A';
+UPDATE tenders SET manufacturer = 'Sun Pharmaceutical Industries' WHERE tender_no = '11251337A';
+UPDATE tenders SET manufacturer = 'Kirloskar Brothers Limited' WHERE tender_no = '68255647';
+UPDATE tenders SET manufacturer = 'Lupin Limited' WHERE tender_no = 'CH251661A';
+UPDATE tenders SET manufacturer = 'Hindustan Machine Tools Limited' WHERE tender_no = 'L825055B';
+UPDATE tenders SET manufacturer = 'Sundram Fasteners Limited' WHERE tender_no = '73251081';
+UPDATE tenders SET manufacturer = 'Asian Paints Limited' WHERE tender_no = '72255458';
+UPDATE tenders SET manufacturer = 'Supreme Industries Limited' WHERE tender_no = '65255436';
+UPDATE tenders SET manufacturer = 'Aurobindo Pharma Limited' WHERE tender_no = 'CH251742A';
+UPDATE tenders SET manufacturer = 'Cummins India Limited' WHERE tender_no = 'L5255528';
+UPDATE tenders SET manufacturer = 'Ashok Leyland Limited' WHERE tender_no = 'L5255584';
+UPDATE tenders SET manufacturer = 'Electrosteel Steels Limited' WHERE tender_no = '11256164';
+UPDATE tenders SET manufacturer = 'JSW Steel Limited' WHERE tender_no = 'L9255865';
+UPDATE tenders SET manufacturer = 'Godrej Industries Limited' WHERE tender_no = '95256110';
+UPDATE tenders SET manufacturer = 'Wheels India Limited' WHERE tender_no = '28251205A';
+UPDATE tenders SET manufacturer = 'SKF India Limited' WHERE tender_no = 'LH255945C';
+UPDATE tenders SET manufacturer = 'Timken India Limited' WHERE tender_no = 'L7255948';
+UPDATE tenders SET manufacturer = 'Crompton Greaves Consumer Electricals' WHERE tender_no = '95255753';
+UPDATE tenders SET manufacturer = 'Force Motors Limited' WHERE tender_no = '31255005A';
+UPDATE tenders SET manufacturer = 'Escorts Limited' WHERE tender_no = 'L2256086';
+UPDATE tenders SET manufacturer = 'Bajaj Electricals Limited' WHERE tender_no = '04251350B';
+UPDATE tenders SET manufacturer = 'Finolex Cables Limited' WHERE tender_no = 'L8256356';
+UPDATE tenders SET manufacturer = 'Bharat Electronics Limited' WHERE tender_no = '04251040A';
+UPDATE tenders SET manufacturer = 'Tube Investments of India Limited' WHERE tender_no = 'L2246319E';
+UPDATE tenders SET manufacturer = 'Schneider Electric India' WHERE tender_no = 'L2255989A';
+UPDATE tenders SET manufacturer = 'Thermax Limited' WHERE tender_no = '11256130';
+UPDATE tenders SET manufacturer = 'Krones India Private Limited' WHERE tender_no = '11256156';
+
+-- Update remaining records with pattern-based assignments using Indian companies
+UPDATE tenders SET manufacturer = 'Reliance Industries Limited' WHERE manufacturer IS NULL AND tender_no LIKE '%251%';
+UPDATE tenders SET manufacturer = 'Tata Motors Limited' WHERE manufacturer IS NULL AND tender_no LIKE '%252%';
+UPDATE tenders SET manufacturer = 'Hero MotoCorp Limited' WHERE manufacturer IS NULL AND tender_no LIKE '%253%';
+UPDATE tenders SET manufacturer = 'Maruti Suzuki India Limited' WHERE manufacturer IS NULL AND tender_no LIKE '%254%';
+UPDATE tenders SET manufacturer = 'Bharat Petroleum Corporation Limited' WHERE manufacturer IS NULL AND tender_no LIKE '%255%';
+UPDATE tenders SET manufacturer = 'Indian Oil Corporation Limited' WHERE manufacturer IS NULL AND tender_no LIKE '%256%';
+UPDATE tenders SET manufacturer = 'NTPC Limited' WHERE manufacturer IS NULL AND tender_no LIKE '%L%';
+UPDATE tenders SET manufacturer = 'Power Grid Corporation of India' WHERE manufacturer IS NULL AND tender_no LIKE '%CH%';
+UPDATE tenders SET manufacturer = 'Coal India Limited' WHERE manufacturer IS NULL AND dept_railway_unit LIKE '%ELSD%';
+UPDATE tenders SET manufacturer = 'SAIL (Steel Authority of India Limited)' WHERE manufacturer IS NULL AND dept_railway_unit LIKE '%STORES%';
+UPDATE tenders SET manufacturer = 'ONGC (Oil and Natural Gas Corporation)' WHERE manufacturer IS NULL AND dept_railway_unit LIKE '%GSD%';
+UPDATE tenders SET manufacturer = 'GAIL (Gas Authority of India Limited)' WHERE manufacturer IS NULL AND dept_railway_unit LIKE '%DIV%';
+UPDATE tenders SET manufacturer = 'Hindustan Petroleum Corporation Limited' WHERE manufacturer IS NULL AND dept_railway_unit LIKE '%CSD%';
+UPDATE tenders SET manufacturer = 'Rashtriya Ispat Nikgam Limited' WHERE manufacturer IS NULL AND dept_railway_unit LIKE '%MSD%';
+UPDATE tenders SET manufacturer = 'NMDC Limited' WHERE manufacturer IS NULL AND dept_railway_unit LIKE '%TSD%';
+UPDATE tenders SET manufacturer = 'Container Corporation of India' WHERE manufacturer IS NULL AND dept_railway_unit LIKE '%LSD%';
+UPDATE tenders SET manufacturer = 'Engineers India Limited' WHERE manufacturer IS NULL AND dept_railway_unit LIKE '%SBC%';
+UPDATE tenders SET manufacturer = 'BEML Limited' WHERE manufacturer IS NULL AND dept_railway_unit LIKE '%BSP%';
+UPDATE tenders SET manufacturer = 'Mazagon Dock Shipbuilders Limited' WHERE manufacturer IS NULL AND dept_railway_unit LIKE '%MYS%';
+UPDATE tenders SET manufacturer = 'Garden Reach Shipbuilders & Engineers' WHERE manufacturer IS NULL AND dept_railway_unit LIKE '%CLS%';
+UPDATE tenders SET manufacturer = 'Bharat Dynamics Limited' WHERE manufacturer IS NULL AND dept_railway_unit LIKE '%TPJ%';
+UPDATE tenders SET manufacturer = 'Indian Railways Construction Company' WHERE manufacturer IS NULL AND dept_railway_unit LIKE '%UBL%';
+UPDATE tenders SET manufacturer = 'Rail Vikas Nigam Limited' WHERE manufacturer IS NULL AND dept_railway_unit LIKE '%RWSS%';
+UPDATE tenders SET manufacturer = 'IRCON International Limited' WHERE manufacturer IS NULL AND dept_railway_unit LIKE '%DSB%';
+UPDATE tenders SET manufacturer = 'Railtel Corporation of India Limited' WHERE manufacturer IS NULL AND dept_railway_unit LIKE '%BLW%';
+
+-- Final catch-all for any remaining NULL values
+UPDATE tenders SET manufacturer = 'Make in India Manufacturing Consortium' WHERE manufacturer IS NULL;
+
 select * from tenders;
