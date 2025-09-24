@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ResultsPage extends StatelessWidget {
-  final String qrCode;
   final Map<String, dynamic> data;
 
-  const ResultsPage({Key? key, required this.qrCode, required this.data})
-    : super(key: key);
+  const ResultsPage({Key? key, required this.data}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,43 +21,9 @@ class ResultsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // QR Code Display
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: Colors.blue.shade50,
-                borderRadius: BorderRadius.circular(8.0),
-                border: Border.all(color: Colors.blue.shade200),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Scanned QR Code:',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    qrCode,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'Courier',
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-
             // Results Table Header
             const Text(
-              'Database Results:',
+              'Scan Results:',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),

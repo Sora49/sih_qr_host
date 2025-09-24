@@ -17,6 +17,25 @@ class _QRScannerPageState extends State<QRScannerPage> {
   String? qrText;
   bool isLoading = false;
   String? errorMessage;
+  bool hasScanned = false; // Add flag to prevent multiple scans
+  MobileScannerController controller =
+      MobileScannerController(); // Add controller
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  void resetScanner() {
+    setState(() {
+      hasScanned = false;
+      qrText = null;
+      errorMessage = null;
+      isLoading = false;
+    });
+    controller.start(); // Restart scanning
+  }
 
   Future<bool> testConnectivity() async {
     try {
@@ -96,10 +115,11 @@ class _QRScannerPageState extends State<QRScannerPage> {
         // Navigate to results page
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => ResultsPage(qrCode: uuid, data: data),
-          ),
-        );
+          MaterialPageRoute(builder: (context) => ResultsPage(data: data)),
+        ).then((_) {
+          // Reset scanner when returning from results page
+          resetScanner();
+        });
       } catch (e) {
         throw Exception("Failed to parse JSON response: $e");
       }
@@ -108,7 +128,9 @@ class _QRScannerPageState extends State<QRScannerPage> {
       setState(() {
         errorMessage = error.toString();
         isLoading = false;
+        hasScanned = false; // Allow scanning again after error
       });
+      controller.start(); // Restart scanning after error
     }
   }
 
@@ -126,14 +148,21 @@ class _QRScannerPageState extends State<QRScannerPage> {
             child: Container(
               width: double.infinity,
               child: MobileScanner(
+                controller: controller,
                 onDetect: (BarcodeCapture capture) {
+                  // Prevent multiple scans
+                  if (hasScanned || isLoading) return;
+
                   final List<Barcode> barcodes = capture.barcodes;
                   for (final barcode in barcodes) {
                     if (barcode.rawValue != null) {
                       setState(() {
                         qrText = barcode.rawValue!;
+                        hasScanned = true; // Mark as scanned
                       });
+                      controller.stop(); // Stop scanning
                       fetchRowData(barcode.rawValue!);
+                      break; // Exit loop after first valid barcode
                     }
                   }
                 },
@@ -202,8 +231,31 @@ class _QRScannerPageState extends State<QRScannerPage> {
                           ),
                           textAlign: TextAlign.center,
                         ),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: resetScanner,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+                          ),
+                          child: const Text('Try Again'),
+                        ),
                       ],
                     ),
+                  ),
+                // Show scan again button if already scanned successfully
+                if (hasScanned && !isLoading && errorMessage == null)
+                  ElevatedButton(
+                    onPressed: resetScanner,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 12,
+                      ),
+                    ),
+                    child: const Text('Scan Another QR Code'),
                   ),
               ],
             ),
